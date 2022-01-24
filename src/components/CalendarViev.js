@@ -29,22 +29,8 @@ export default class CalendarViev extends React.Component {
         )
     }
 
-    renderMeetings = (e) => {
-        const meetings = this.props.meetings;
-
-        return meetings.map( meeting => {
-           if( e.target.dataset.date === meeting.date ) {
-               return e.target.dataset.meeting = 'abc'
-
-           }
-           else {
-               console.log('nie')
-           }
-        })
-    }
 
     handleClick = (e) => {
-
         const currentDate = this.state.date;
 
         if(e.target.className.includes('fa-arrow-left') ) {
@@ -125,67 +111,65 @@ export default class CalendarViev extends React.Component {
 
         const currentMonthDays = this.getCurrentMonthDays(currentDate)
 
-        return currentMonthDays.map( day=> {
-            const { dayNumber, fullDate } = day;
+        // return currentMonthDays.map( day=> {
+        //     const { dayNumber, fullDate } = day;
 
-            if( this.highlightToday(currentDate, dayNumber) ) {
-                return(
-                    <span
-                        className='calendarViev__day--number day__number--current today'
-                        key={fullDate}
-                        onClick={ (e) => this.renderMeetings(e) }
-                        data-date={fullDate}
-                    >
-                        {dayNumber}
-                    </span>
-                )
-            }
-            return(
-                <span
-                    className='calendarViev__day--number day__number--current'
-                    key={fullDate}
-                    onClick={ (e) => this.renderMeetings(e) }
-                    data-date={fullDate}
-                >
-                    {dayNumber}
-                </span>
-            )
-        })
+        //     if( this.highlightToday(currentDate, dayNumber) ) {
+        //         return(
+        //             <span
+        //                 className='calendarViev__day--number day__number--current today'
+        //                 key={fullDate}
+        //                 data-date={fullDate}
+        //                 ref={ node => this.span = node }
+        //             >
+        //                 {dayNumber}
+        //             </span>
+        //         )
+        //     }
+        //     return(
+        //         <span
+        //             className='calendarViev__day--number day__number--current'
+        //             key={fullDate}
+        //             data-date={fullDate}
+        //         >
+        //             {dayNumber}
+        //         </span>
+        //     )
+        // })
     }
 
     renderPrevMonthDays = (currentDate) => {
 
         const prevMonthDays = this.getPrevMonthDays(currentDate);
 
-        return prevMonthDays.map( day=> {
-            const { dayNumber, fullDate } = day;
+        // return prevMonthDays.map( day=> {
+        //     const { dayNumber, fullDate } = day;
 
-            return(
-                <span
-                    className='calendarViev__day--number day__number--prev'
-                    key={fullDate}
-                    onClick={ (e) => this.renderMeetings(e) }
-                    data-date={fullDate}
-                >
-                    {dayNumber}
-                </span>
-            )
-        })
+        //     return(
+        //         <span
+        //             className='calendarViev__day--number day__number--prev'
+        //             key={fullDate}
+        //             data-date={fullDate}
+        //         >
+        //             {dayNumber}
+        //         </span>
+        //     )
+        // })
     }
 
     renderNextMonthDays = (currentDate) => {
 
         const nextMonthDays = this.getNextMonthDays(currentDate);
+        console.log(nextMonthDays)
 
         return nextMonthDays.map( day => {
-            const { dayNumber, fullDate } = day;
+            const { dayNumber, fullDate, meeting } = day;
 
             return(
                 <span
                     className='calendarViev__day--number day__number--next'
                     key={fullDate}
-                    onClick={ (e) => this.renderMeetings(e) }
-                    data-date={fullDate}
+                    data-meeting={meeting}
                 >
                     {dayNumber}
                 </span>
@@ -232,6 +216,7 @@ export default class CalendarViev extends React.Component {
 
         for(let i=1; i<= nextMonthDays; i++) {
             const dayData = this.setDayData(i , currentDate, 1)
+            console.log(dayData)
             daysOfTheNextMonth.push(dayData);
         };
 
@@ -239,8 +224,18 @@ export default class CalendarViev extends React.Component {
     }
 
     setDayData = (index, date, value) => {
-        const dayData = { dayNumber: index, fullDate: this.getFullDateForThisDay(index , date, value) }
-        return dayData;
+        const fullDateOfDay = this.getFullDateForThisDay(index , date, value)
+        const { meetings } = this.props;
+
+        return meetings.map( meeting => {
+            if( meeting.date === fullDateOfDay ) {
+                const dayData = { dayNumber: index, fullDate: fullDateOfDay, meeting: 'yes' }
+                return dayData
+            } else {
+                const dayData = { dayNumber: index, fullDate: fullDateOfDay, meeting: 'no' }
+                return dayData
+            }
+        })
     }
 
     getFullDateForThisDay = (day , date, value) => {

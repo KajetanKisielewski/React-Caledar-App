@@ -190,16 +190,16 @@
   cursor: pointer;
 }
 
-/*
+
 .calendarViev__day--number::after {
-  content: attr(data-content);
+  content: attr(data-meeting);
   display: block;
-  font-size: 0.1rem;
+  font-size: 1rem;
   font-weight: bold;
   color: red;
-} */
+}
 
-.day__number--prev,
+*/ .day__number--prev,
 .day__number--next {
   opacity: 0.5;
 }
