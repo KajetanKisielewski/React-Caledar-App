@@ -11,17 +11,23 @@ export default class CaledarForm extends React.Component {
     }
 
     render() {
-
-        console.log(this.state)
-
         return(
             <section className='main__section--form'>
                 <header className='form__header'>
                     <h2 className='form__title'>Schedule a meeting</h2>
                 </header>
                 <div className='form__wrapper'>
-                    <form className='form__form'>
+                    <form
+                        className='form__form'
+                        onSubmit={ this.handleSubmit }
+                    >
                         { this.renderFormFields() }
+                        <button
+                            className="form__button"
+                            type='submit'
+                        >
+                            Submit
+                        </button>
                     </form>
                 </div>
             </section>
@@ -31,55 +37,103 @@ export default class CaledarForm extends React.Component {
 
     renderFormFields = () => {
         const { formFields } = this.props;
-        // console.log(formFields)
 
         return formFields.map( field => {
 
-            const { name, label, type, key, pattern } = field;
-
+            const { name, label, type, key, pattern, error } = field;
             return(
-                 <label
-                    className="form__label"
-                    htmlFor="{name}"
+                <div
+                    className='form__field'
                     key={key}
                 >
-                    {label}
-                    <input
-                        className="form__input"
-                        id={name}
-                        name={name}
-                        type={type}
-                        onChange={this.handleInput}
-                        pattern={pattern}
-                    />
-                 </label>
+                    <label
+                        className='form__label'
+                        htmlFor='{name}'
+                    >
+                        {label}
+                        <input
+                            className='form__input'
+                            id={name}
+                            name={name}
+                            type={type}
+                            value={ this.state[name].value }
+                            onChange={ (e) => this.handleInput(e, pattern, error) }
+                        />
+                    </label>
+                </div>
              )
         })
     }
 
-    handleInput = (e) => {
+    handleSubmit = (e) => {
         e.preventDefault();
 
-        const { pattern } = e.target;
+        const { firstName , lastName, email, date, time } = this.state;
+
+        if( this.validation(e, this.state) ) {
+            const meetingData = {
+                firstName: firstName.value,
+                lastName: lastName.value,
+                email: email.value,
+                date: date.value,
+                time: time.value
+            }
+
+            this.props.onSubmit(meetingData)
+        }
+    }
+
+    validation = (e , data) => {
+        const stateData = Object.values(data)
+        const validationArray = []
+
+        stateData.forEach( item => {
+            if(item.isValid === true) {
+                validationArray.push(true)
+            }
+        })
+
+        if(validationArray.length === 5) {
+            this.clearError(e.target)
+            return true
+        }
+        else {
+            this.addError(e.target, 'All fields must be completed correctly')
+        }
+    }
+
+
+
+    handleInput = (e, regex, error) => {
+        e.preventDefault();
+        this.clearError(e.target)
 
         const { name, value } = e.target;
-        console.log('name' , name)
-        console.log(' value' , value)
 
-        const reg = pattern
-        console.log('reg' , reg)
+        if ( regex.test(value) ) {
 
-        const reg1 = /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/
-        console.log('reg1' , reg1)
-
-        console.log(reg1.test(value))
-        console.log(pattern.test(value))
-
-        // if ( pattern.test(value) ) { return console.log('true') }
-        // else { return console.log('false')  }
-
-        // this.setState( state => ({
-        //     [name]: { ...state[name] , value }
-        // }))
+            this.setState({
+                [name]: { value: value, isValid: true }
+            })
+        }
+        else {
+            this.addError(e.target , error)
+            this.setState({
+                [name]: { value: value, isValid: false }
+            })
+        }
     }
+
+    addError = (item , error) => {
+        item.parentElement.parentElement.setAttribute('data-error' , error)
+    }
+
+    clearError = (item) => {
+        item.parentElement.parentElement.setAttribute('data-error' , "")
+    }
+
+
+
+
+
 }

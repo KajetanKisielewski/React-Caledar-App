@@ -1,38 +1,209 @@
-.App {
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  font-size: 10px;
+  font-family: 'Lato', sans-serif;
+
+  --color-text: rgb(221, 210, 206);
+  --color--backgroud: rgba(0, 0, 0, 0.5);
+  --color--additives: rgb(96, 112, 2);
+}
+
+/* Calendar.js */
+
+.calendar__app {
+  position: relative;
+  max-width: 192rem;
+  min-height: 100vh;
+  margin: 0 auto;
+  background-image: linear-gradient(to bottom, var(--color--backgroud), var(--color--backgroud)), url('./img/appBackground.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+.calendar__app--header {
+  padding: 5rem 2rem 2rem 2rem;
+}
+
+.header__title {
+  font-size: 3rem;
+  text-align: center;
+  color: var(--color-text);
+}
+
+.calendar__app--main {
+  padding: 8rem 10rem;
+  display: flex;
+}
+
+/* CalendarForm.js */
+
+.main__section--form {
+  width: 30%;
+}
+
+.form__header {
+  padding: 0 0 5rem 0;
+}
+
+.form__title {
+  font-size: 2.5rem;
+  text-align: center;
+  color: var(--color-text)
+}
+
+.form__wrapper {
+  border-right: 0.2rem solid var(--color--additives);
+}
+
+.form__form {
+  display: flex;
+  flex-direction: column;
+  padding: 0 2rem 2rem 2rem;
+}
+
+.form__field {
+  margin: 1rem 0;
+}
+
+.form__label {
+  display: block;
+  width: 70%;
+  margin: 0 auto;
+  font-size: 1.5rem;
+  color: var(--color-text)
+}
+
+.form__input {
+  padding: 0.5rem;
+  width: 100%;
+}
+
+.form__field::after,
+.main__section--form::after {
+  content: attr(data-error);
+  display: block;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  color: var(--color-text)
+}
+
+.main__section--form::after {
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.form__button {
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40%;
+  margin-top: 2rem;
+  padding: 1rem 2rem;
+  font-size: 1.7rem;
+  text-decoration: none;
+  background-color: #748320;
+  color: var(--color-text);
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+
+/* CalendarViev.js */
+
+.main__section--calendarViev {
+  width: 40%;
+  margin: 0 auto;
+  background-color: var(--color--backgroud);
+  box-shadow: 0 1rem 3rem var(--color--backgroud);
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.calendarViev__header {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
+  width: 100%;
+  height: 10rem;
+  padding: 0 3rem;
+  text-align: center;
+  background-color: var(--color--additives);
+  text-shadow: 0 0.3rem 0.5rem var(--color--backgroud);
+}
+
+.calendarViev__navigation {
+  font-size: 2.5rem;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.calendarViev__month {
+  font-size: 3rem;
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: 0.3rem;
+  color: var(--color-text);
+}
+
+.calendarViev__fullDate {
+  margin-top: 1rem;
+  font-size: 1.6rem;
+  color: var(--color-text);
+}
+
+.calendarViev__days--names {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 5rem;
+}
+
+.calendarViev__day--name {
+  width: calc(100%/7);
+  font-size: 1.5rem;
+  letter-spacing: 0.1rem;
+  text-align: center;
+  text-shadow: 0 0.3rem 0.5rem var(--color--backgroud);
+  color: var(--color-text);
+}
+
+.calendarViev__days--numbers {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.calendarViev__day--number {
+  display: flex;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  align-items: center;
+  width: calc(100% / 7 - 0.6rem);
+  height: 5rem;
+  margin: 0.3rem;
+  font-size: 1.5rem;
+  color: var(--color-text);
+  text-shadow: 0 0.3rem 0.5rem var(--color--backgroud);
+  cursor: pointer;
 }
 
-.App-link {
-  color: #61dafb;
+/*
+.calendarViev__day--number::after {
+  content: attr(data-content);
+  display: block;
+  font-size: 0.1rem;
+  font-weight: bold;
+  color: red;
+} */
+
+.day__number--prev,
+.day__number--next {
+  opacity: 0.5;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.today {
+  background-color: var(--color--additives);
 }
