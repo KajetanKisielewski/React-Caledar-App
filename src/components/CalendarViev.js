@@ -11,7 +11,7 @@ export default class CalendarViev extends React.Component {
             <section className='main__section--calendarViev'>
                 <header className='calendarViev__header'>
                     <i
-                       onClick={ (e) => this.handleClick(e) }
+                       onClick={ (e) => this.handleNavClick(e) }
                        className='calendarViev__navigation fas fa-arrow-left'
                     ></i>
                     <div className='calendarViev__title'>
@@ -19,7 +19,7 @@ export default class CalendarViev extends React.Component {
                        { this.renderCurrentData() }
                     </div>
                     <i
-                       onClick={ (e) => this.handleClick(e) }
+                       onClick={ (e) => this.handleNavClick(e) }
                        className='calendarViev__navigation fas fa-arrow-right'
                     ></i>
                 </header>
@@ -29,8 +29,12 @@ export default class CalendarViev extends React.Component {
         )
     }
 
+    componentDidMount = () => {
+        this.getDataOfCurrentDay( this.state.date )
+    }
 
-    handleClick = (e) => {
+
+    handleNavClick = (e) => {
         const currentDate = this.state.date;
 
         if(e.target.className.includes('fa-arrow-left') ) {
@@ -46,12 +50,34 @@ export default class CalendarViev extends React.Component {
                 date: new Date(changeMonth)
             })
         }
+    }
 
+    getDataOfCurrentDay = (currentDate) => {
+        const currentDay = currentDate.toISOString().split('T')[0];
+        const { meetings, setCurrentDayMeetings } = this.props
 
+        const currentDayData = [];
+
+        meetings.forEach( meeting => {
+            if( meeting.date === currentDay ) { return currentDayData.push( meeting , currentDay ) }
+        })
+
+        setCurrentDayMeetings(currentDayData)
+    }
+
+    handleDayClick = (e) => {
+        const { meetings, setSelectedMeetings } = this.props;
+
+        const meetingData = []
+
+        meetings.forEach( meeting => {
+            console.log(meeting)
+            if( meeting.date === e.target.dataset.date  ) { return meetingData.push(meeting , e.target.dataset.date) }
+        })
+        setSelectedMeetings(meetingData);
     }
 
     renderDaysNames = () => {
-
         const { dateData: { daysNames } } = this.props;
 
         return daysNames.map( day => {
@@ -69,7 +95,6 @@ export default class CalendarViev extends React.Component {
     }
 
     renderMonthName = () => {
-
         const { dateData: { monthsNames } } = this.props;
         const currentDate = this.state.date
         const currentMonth = currentDate.getMonth();
@@ -84,7 +109,6 @@ export default class CalendarViev extends React.Component {
     }
 
     renderCurrentData = () => {
-
         const currentDate = this.state.date
         const fullDate = currentDate.toDateString()
 
@@ -105,71 +129,93 @@ export default class CalendarViev extends React.Component {
             this.renderCurrentMonthDays(currentDate),
             this.renderNextMonthDays(currentDate)
         ]
+
+    }
+
+    meetingNotification = (dayDate) => {
+        const { meetings } = this.props;
+        const meetingNotification = []
+
+        meetings.forEach( meeting => {
+            if( meeting.date === dayDate) {
+                const icon = String.fromCodePoint(10029)
+                meetingNotification.push( icon )
+            }
+        })
+        return meetingNotification
     }
 
     renderCurrentMonthDays = (currentDate) => {
+        const currentMonthDays = this.getCurrentMonthDays(currentDate);
 
-        const currentMonthDays = this.getCurrentMonthDays(currentDate)
+        return currentMonthDays.map( day => {
 
-        // return currentMonthDays.map( day=> {
-        //     const { dayNumber, fullDate } = day;
+            const { dayNumber, fullDate } = day;
+            const meetingNotification = this.meetingNotification(fullDate)
 
-        //     if( this.highlightToday(currentDate, dayNumber) ) {
-        //         return(
-        //             <span
-        //                 className='calendarViev__day--number day__number--current today'
-        //                 key={fullDate}
-        //                 data-date={fullDate}
-        //                 ref={ node => this.span = node }
-        //             >
-        //                 {dayNumber}
-        //             </span>
-        //         )
-        //     }
-        //     return(
-        //         <span
-        //             className='calendarViev__day--number day__number--current'
-        //             key={fullDate}
-        //             data-date={fullDate}
-        //         >
-        //             {dayNumber}
-        //         </span>
-        //     )
-        // })
+
+            if( this.highlightToday(currentDate, dayNumber) ) {
+                return(
+                    <span
+                        className='calendarViev__day--number day__number--current today'
+                        key={fullDate}
+                        data-date={fullDate}
+                        data-meeting={meetingNotification}
+                        onClick={ (e) => this.handleDayClick(e) }
+                    >
+                        {dayNumber}
+                    </span>
+                )
+            }
+            return(
+                <span
+                    className='calendarViev__day--number day__number--current'
+                    key={fullDate}
+                    data-date={fullDate}
+                    data-meeting={meetingNotification}
+                    onClick={ (e) => this.handleDayClick(e) }
+                >
+                    {dayNumber}
+                </span>
+            )
+        })
     }
 
     renderPrevMonthDays = (currentDate) => {
-
         const prevMonthDays = this.getPrevMonthDays(currentDate);
 
-        // return prevMonthDays.map( day=> {
-        //     const { dayNumber, fullDate } = day;
+        return prevMonthDays.map( day=> {
+            const { dayNumber, fullDate } = day;
+            const meetingNotification = this.meetingNotification(fullDate)
 
-        //     return(
-        //         <span
-        //             className='calendarViev__day--number day__number--prev'
-        //             key={fullDate}
-        //             data-date={fullDate}
-        //         >
-        //             {dayNumber}
-        //         </span>
-        //     )
-        // })
+            return(
+                <span
+                    className='calendarViev__day--number day__number--prev'
+                    key={fullDate}
+                    data-date={fullDate}
+                    data-meeting={meetingNotification}
+                    onClick={ (e) => this.handleDayClick(e) }
+                >
+                    {dayNumber}
+                </span>
+            )
+        })
     }
 
     renderNextMonthDays = (currentDate) => {
-
         const nextMonthDays = this.getNextMonthDays(currentDate);
-        console.log(nextMonthDays)
 
         return nextMonthDays.map( day => {
-            const { dayNumber, fullDate, meeting } = day;
+            const { dayNumber, fullDate } = day;
+            const meetingNotification = this.meetingNotification(fullDate)
 
             return(
                 <span
                     className='calendarViev__day--number day__number--next'
                     key={fullDate}
-                    data-meeting={meeting}
+                    data-date={fullDate}
+                    data-meeting={meetingNotification}
+                    onClick={ (e) => this.handleDayClick(e) }
                 >
                     {dayNumber}
                 </span>
@@ -178,7 +224,6 @@ export default class CalendarViev extends React.Component {
     }
 
     getCurrentMonthDays = (currentDate) => {
-
         const numberOfCurrentMonthDays = this.getNumberOfMonthDays(currentDate , 1)
         const daysOfTheCurrentMonth = [];
 
@@ -192,7 +237,6 @@ export default class CalendarViev extends React.Component {
 
 
     getPrevMonthDays = (currentDate) => {
-
         const numberOfPrevMonthDays = this.getNumberOfMonthDays(currentDate, 0)
         const indexOfCurrentDay = this.getIndexOfFirstDayInMonth(currentDate)
         const daysofThePrevMonth = [];
@@ -208,7 +252,6 @@ export default class CalendarViev extends React.Component {
     }
 
     getNextMonthDays = (currentDate) => {
-
         const daysInTheWeek = 7;
         const indexOfLastDayInMounth = this.getIndexOfLastDayInMounth(currentDate);
         const nextMonthDays = `${ daysInTheWeek - indexOfLastDayInMounth}`;
@@ -216,7 +259,6 @@ export default class CalendarViev extends React.Component {
 
         for(let i=1; i<= nextMonthDays; i++) {
             const dayData = this.setDayData(i , currentDate, 1)
-            console.log(dayData)
             daysOfTheNextMonth.push(dayData);
         };
 
@@ -224,29 +266,22 @@ export default class CalendarViev extends React.Component {
     }
 
     setDayData = (index, date, value) => {
-        const fullDateOfDay = this.getFullDateForThisDay(index , date, value)
-        const { meetings } = this.props;
-
-        return meetings.map( meeting => {
-            if( meeting.date === fullDateOfDay ) {
-                const dayData = { dayNumber: index, fullDate: fullDateOfDay, meeting: 'yes' }
-                return dayData
-            } else {
-                const dayData = { dayNumber: index, fullDate: fullDateOfDay, meeting: 'no' }
-                return dayData
-            }
-        })
+        const dayData = {
+            dayNumber: index,
+            fullDate: this.getFullDateForThisDay(index , date, value)
+        }
+        return dayData
     }
 
     getFullDateForThisDay = (day , date, value) => {
 
-        if(value === 0 ) {
+        if( `${value}` === `${0}` ) {
             const formattedDate = new Date( date.getFullYear(), date.getMonth(), day + 1 ).toISOString().split('T')[0];
             return formattedDate;
-        } else if( value === -1 ) {
+        } else if( `${value}` === `${-1}` ) {
             const formattedDate = new Date( date.getFullYear(), date.getMonth() - 1, day + 1 ).toISOString().split('T')[0];
             return formattedDate;
-        } else if( value === 1) {
+        } else if( `${value}` === `${1}`) {
             const formattedDate = new Date( date.getFullYear(), date.getMonth() + 1, day + 1 ).toISOString().split('T')[0];
             return formattedDate;
         }

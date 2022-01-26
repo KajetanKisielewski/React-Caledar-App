@@ -15,11 +15,14 @@ export default class Calendar extends React.Component {
     }
 
     state = {
-        meetings: []
+        meetings: [],
+        selectedMeetings: [],
+        currentDayMeetings: []
     }
 
 
     render() {
+        console.log(this.state)
         return(
 
             <div className='calendar__app'>
@@ -27,9 +30,12 @@ export default class Calendar extends React.Component {
                     <h1 className='header__title'>Welcome to the meeting planner app</h1>
                 </header>
                 <main className='calendar__app--main'>
-                        <CaledarForm formFields={formFieldsData} onSubmit={this.addMeeting}/>
-                        <CalendarViev dateData={dateData} meetings={this.state.meetings}/>
+                        <CaledarForm formFields={formFieldsData} onSubmit={this.addMeeting} />
+                        <CalendarViev dateData={dateData} meetings={this.state.meetings} setSelectedMeetings={this.setStateOfSelectedMeeting} setCurrentDayMeetings={this.setStateOfCurrentDayMeeting} />
                 </main>
+                <section className='calendar__app--meetings'>
+                        <CalendarList meetings={this.state.meetings} currentDayMeetings={this.state.currentDayMeetings} selectedMeetings={this.state.selectedMeetings} />
+                </section>
             </div>
         )
     }
@@ -42,15 +48,27 @@ export default class Calendar extends React.Component {
             .then( this.loadMeetings() )
     }
 
-    loadMeetings = () => {
-        this.api.loadData()
-            .then( data => this.setStateData(data) )
-            .catch( err => console.log(err) );
+    setStateOfSelectedMeeting = (data) => {
+        this.setState({
+            selectedMeetings: data
+        })
     }
 
-    setStateData = (data) => {
+    setStateOfCurrentDayMeeting = (data) => {
+        this.setState({
+            currentDayMeetings: data
+        })
+    }
+
+    setStateMeetingsData = (data) => {
         this.setState({
             meetings: data
         })
+    }
+
+    loadMeetings = () => {
+        this.api.loadData()
+            .then( data => this.setStateMeetingsData(data) )
+            .catch( err => console.log(err) );
     }
 }

@@ -111,7 +111,6 @@ export default class CaledarForm extends React.Component {
         const { name, value } = e.target;
 
         if ( regex.test(value) ) {
-
             this.setState({
                 [name]: { value: value, isValid: true }
             })
@@ -131,9 +130,5 @@ export default class CaledarForm extends React.Component {
     clearError = (item) => {
         item.parentElement.parentElement.setAttribute('data-error' , "")
     }
-
-
-
-
 
 }

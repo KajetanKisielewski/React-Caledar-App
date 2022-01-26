@@ -178,6 +178,7 @@
 }
 
 .calendarViev__day--number {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -192,18 +193,93 @@
 
 
 .calendarViev__day--number::after {
+  position: absolute;
+  top: 0;
+  right: 5%;
   content: attr(data-meeting);
-  display: block;
-  font-size: 1rem;
-  font-weight: bold;
-  color: red;
+  display: inline-block;
+  font-size: 2rem;
+  color: #E4773E;
 }
 
-*/ .day__number--prev,
+.day__number--prev,
 .day__number--next {
   opacity: 0.5;
 }
 
 .today {
   background-color: var(--color--additives);
+}
+
+/* CalendarList.js */
+
+.calendar__app--meetings {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+}
+
+.meetings__selected {
+  padding: 5rem;
+}
+
+.meetings__selected--title {
+  text-align: center;
+  font-size: 2.5rem;
+  letter-spacing: 0.2rem;
+  text-transform: uppercase;
+  color: var(--color-text);
+}
+
+.main__meetings--list {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.meetings__list--meeting {
+  display: flex;
+  flex-direction: column;
+  width: 45%;
+  margin: 5rem 2rem;
+  padding: 2rem;
+  background-color: var(--color--backgroud);
+  box-shadow: 0 1rem 3rem var(--color--backgroud);
+  border: 0.2rem solid var(--color--additives);
+}
+
+.list__meeting--date,
+.list__meeting--email {
+  font-size: 2rem;
+  margin-top: 1rem;
+  color: var(--color-text);
+  text-shadow: 0 0.3rem 0.5rem var(--color--backgroud);
+  text-align: center;
+}
+
+.list__meeting--email {
+  padding: 1rem;
+  text-decoration: none;
+}
+
+.email__highlight {
+  margin-left: 1rem;
+  color: var(--color--additives)
+}
+
+.list__meeting--button {
+  display: block;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40%;
+  margin-top: 2rem;
+  padding: 1rem 2rem;
+  font-size: 1.7rem;
+  text-decoration: none;
+  background-color: #748320;
+  color: var(--color-text);
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
 }
