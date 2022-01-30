@@ -1,171 +1,101 @@
 import React from 'react'
+import ListItem from '../ListItem';
 
 export default class CalendarList extends React.Component {
     render() {
         return(
 
-            <div className='meetings__selected'>
-                <header className='meetings__selected--header'>
+            <div className='meetings__container'>
+                <header className='meetings__container--header'>
                     { this.renderTitle() }
                 </header>
-                <main className='meetings__selected--main'>
-                    <div className='main__meetings--list'>
-                        { this.renderMeetingsList() }
+                <main className='meetings__container--main'>
+
+                    <div className='main__meetings--currentDay'>
+                        { this.renderMeetings() }
                     </div>
+
+                    <h2 className='meetings__list--title'>appointments list</h2>
+                    <div className='main__meetings--list'>
+                        { this.renderAllMeetingsList() }
+                    </div>
+
                 </main>
             </div>
         )
     }
 
-    // renderMeetingsForCurrentDay = () => {
-    //     const { currentDayMeeting } = this.props.currentDayMeetings;
 
-    //     if(currentDayMeeting !== undefined && currentDayMeeting !== '') {
+    renderMeetings = () => {
+        const { selectedMeetings } = this.props
 
-    //         return currentDayMeeting.map( meeting => {
+        return selectedMeetings.length === 0 ? this.renderMeetingsForCurrentDay() : this.renderMeetingsForSelectedDay()
+    }
 
-    //             return(
-    //                 <div
-    //                     className='meeting__selected--currentMeeting'
-    //                     key={meeting.date}
-    //                 >
-    //                     <p
-    //                         className='currentMeeting--date'
-    //                     >
-    //                         You have an appointment scheduled for today at {meeting.time}</p>
-    //                     <p
-    //                         className='currentMeeting--date'
-    //                     >
-    //                         You have a meeting with {meeting.firstName}{meeting.lastName}</p>
-    //                     <a
-    //                         className='currentMeeting--email'
-    //                         href={`mailto:${meeting.email}`}
-    //                     >
-    //                         {meeting.email}
-    //                     </a>
-    //                     <button
-    //                         className='meeting__selected--button'
-    //                         onClick={ () => this.removeMeeting(meeting.id)} >
-    //                     >
-    //                         remove meeting
-    //                     </button>
-    //                 </div>
-    //             )
-    //         })
-    //     }
-    // }
+    renderMeetingsForCurrentDay = () => {
+        const { currentDayMeetings, removeMeeting } = this.props
 
-    // renderMeetingsForSelectedDay = () => {
-    //     const selectedMeetings = this.props.selectedMeetings;
+        if( currentDayMeetings.length !== 0 ) {
+            return currentDayMeetings.map( dayMeeting => {
+                const { meeting: { id , date, time, firstName, lastName, email } } = dayMeeting
 
-    //     if(selectedMeetings) {
-    //         return selectedMeetings.map( meeting => {
-    //             return(
-    //                 <div
-    //                     className='meeting__selected--selectedMeeting'
-    //                     key={ `${meeting.date}-selected`}
-    //                 >
-    //                     <p
-    //                         className='selectedMeeting--date'
-    //                     >
-    //                         You have an appointment scheduled for {meeting.selectedDay} at {meeting.time}</p>
-    //                     <p
-    //                         className='selectedMeeting--date'
-    //                     >
-    //                         You have a meeting with {meeting.firstName}{meeting.lastName}</p>
-    //                     <a
-    //                         className='selectedMeeting--email'
-    //                         href={`mailto:${meeting.email}`}
-    //                     >
-    //                         {meeting.email}
-    //                     </a>
-    //                     <button
-    //                         className='meeting__selected--button'
-    //                         onClick={ () => this.removeMeeting(meeting.id)}
-    //                     >
-    //                         remove meeting
-    //                     </button>
-    //                 </div>
-    //             )
-    //         })
-    //     }
-    // }
-
-
-    renderMeetingsList = () => {
-        const meetings = this.props.meetings;
-
-        if(meetings) {
-            return meetings.map( meeting => {
-                return(
-                    <div
-                        className='meetings__list--meeting'
-                        key={ `${meeting.date}--list` }
-                    >
-                        <p
-                            className='list__meeting--date'
-                        >
-                            You have an appointment scheduled for {meeting.date} at {meeting.time}</p>
-                        <p
-                            className='list__meeting--date'
-                        >
-                            You have a meeting with {meeting.firstName} {meeting.lastName}</p>
-                        <a
-                            className='list__meeting--email'
-                            href={`mailto:${meeting.email}`}
-                        >
-                            {meeting.firstName} {meeting.lastName} email:<span className='email__highlight'> {meeting.email} </span>
-                        </a>
-                        <button
-                            className='list__meeting--button'
-                            onClick={ () => this.removeMeeting(meeting.id)}
-                        >
-                            Remove Meeting
-                        </button>
-                    </div>
-                )
+                return <ListItem key={ `${id}--currentDayMeeting`} date={date} time={time} firstName={firstName} lastName={lastName} email={email} className={'currentDayMeeting'} id={id} removeMeeting={removeMeeting} />
             })
         }
     }
 
-    removeMeeting(id) {
-        this.props.removeMeeting(id)
+    renderMeetingsForSelectedDay = () => {
+        const { selectedMeetings, removeMeeting } = this.props;
+
+        return selectedMeetings.map( selectedMeeting => {
+            const { meeting: { id , date, time, firstName, lastName, email } } = selectedMeeting
+            return <ListItem key={ `${id}--selectedDayMeeting`} date={date} time={time} firstName={firstName} lastName={lastName} email={email} className={'selectedDayMeeting'} id={id} removeMeeting={removeMeeting}  />
+        })
+    }
+
+
+    renderAllMeetingsList = () => {
+        const { meetings , removeMeeting } = this.props;
+        return meetings.map( meeting => {
+            return <ListItem key={ `${meeting.id}--allMeetings`} date={meeting.date} time={meeting.time} firstName={meeting.firstName} lastName={meeting.lastName} email={meeting.email} className={'allMeetings'} id={meeting.id} removeMeeting={removeMeeting}/>
+        })
     }
 
     renderTitle = () => {
         return(
-            <h2 className='meetings__selected--title'>
+            <h2 className='meetings__container--title'>
                 { this.getTitle() }
             </h2>
         )
     }
 
     getTitle = () => {
+        const { selectedMeetings } = this.props
 
-        return 'Appointments List'
+        return selectedMeetings.length === 0 ? this.renderTitleForCurrentDay() : this.renderTitleForSelectedDay();
+    }
 
-        // const selectedDayMeeting =  this.props.selectedMeetings[0]
-        // const selectedDay = this.props.selectedMeetings[1];
-        // const currentDayMeeting =  this.props.currentDayMeetings[0];
-        // const currentDay = this.props.currentDayMeetings[1];
+    renderTitleForSelectedDay = () => {
+        const { selectedMeetings } = this.props
 
-        // console.log(selectedDayMeeting);
-        // console.log(selectedDay)
-        // console.log(currentDayMeeting);
-        // console.log(currentDay)
+        const selectedDayDate = selectedMeetings.map( selectedMeeting => {
+            const { meeting: { date } } = selectedMeeting;
+            return date;
+        })
 
-        // if( selectedDay === undefined ) {
-        //     if( currentDayMeeting === '' ) { return 'You do not have meetings scheduled for today' }
-        //     return `Your appointments for Today ${currentDay}`
-        // } else {
-        //     if( selectedDayMeeting === '' ) { return `You do not have meetings scheduled for ${selectedDay}`}
-        //     return `Your appointments for ${selectedDay}`
-        // }
+        return `Your appointments for ${selectedDayDate[0]}`;
+    }
 
-        // return selectedDay === undefined ?
-        //     currentDayMeeting === '' ? 'You do not have meetings scheduled for today' : `Your appointments for Today ${currentDay}`
-        //     :
-        //     selectedDayMeeting === '' ? `You do not have meetings scheduled for ${selectedDay}` : `Your appointments for ${selectedDay}`
+    renderTitleForCurrentDay = () => {
+
+        const { currentDayMeetings } = this.props;
+
+        const currentDayDate = currentDayMeetings.map( dayMeeting => {
+            const { meeting: { date } } = dayMeeting;
+            return date;
+        })
+
+        return currentDayMeetings.length === 0 ? 'You do not have meetings scheduled for today' : `Your appointments for Today( ${currentDayDate[0]} )`;
     }
 
 

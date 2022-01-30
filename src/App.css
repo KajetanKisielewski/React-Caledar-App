@@ -9,8 +9,9 @@
   font-family: 'Lato', sans-serif;
 
   --color-text: rgb(221, 210, 206);
-  --color--backgroud: rgba(0, 0, 0, 0.5);
-  --color--additives: rgb(96, 112, 2);
+  --color-backgroud: rgba(0, 0, 0, 0.5);
+  --color-additives: rgb(96, 112, 2);
+  --color-star: rgb(228, 119, 62);
 }
 
 /* Calendar.js */
@@ -20,7 +21,7 @@
   max-width: 192rem;
   min-height: 100vh;
   margin: 0 auto;
-  background-image: linear-gradient(to bottom, var(--color--backgroud), var(--color--backgroud)), url('./img/appBackground.jpg');
+  background-image: linear-gradient(to bottom, var(--color-backgroud), var(--color-backgroud)), url('./img/appBackground.jpg');
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -58,7 +59,7 @@
 }
 
 .form__wrapper {
-  border-right: 0.2rem solid var(--color--additives);
+  border-right: 0.2rem solid var(--color-additives);
 }
 
 .form__form {
@@ -107,7 +108,7 @@
   padding: 1rem 2rem;
   font-size: 1.7rem;
   text-decoration: none;
-  background-color: #748320;
+  background-color: var(--color-additives);
   color: var(--color-text);
   border: none;
   border-radius: 0.5rem;
@@ -120,8 +121,8 @@
 .main__section--calendarViev {
   width: 40%;
   margin: 0 auto;
-  background-color: var(--color--backgroud);
-  box-shadow: 0 1rem 3rem var(--color--backgroud);
+  background-color: var(--color-backgroud);
+  box-shadow: 0 1rem 3rem var(--color-backgroud);
 }
 
 .calendarViev__header {
@@ -132,8 +133,8 @@
   height: 10rem;
   padding: 0 3rem;
   text-align: center;
-  background-color: var(--color--additives);
-  text-shadow: 0 0.3rem 0.5rem var(--color--backgroud);
+  background-color: var(--color-additives);
+  text-shadow: 0 0.3rem 0.5rem var(--color-backgroud);
 }
 
 .calendarViev__navigation {
@@ -168,7 +169,7 @@
   font-size: 1.5rem;
   letter-spacing: 0.1rem;
   text-align: center;
-  text-shadow: 0 0.3rem 0.5rem var(--color--backgroud);
+  text-shadow: 0 0.3rem 0.5rem var(--color-backgroud);
   color: var(--color-text);
 }
 
@@ -187,7 +188,7 @@
   margin: 0.3rem;
   font-size: 1.5rem;
   color: var(--color-text);
-  text-shadow: 0 0.3rem 0.5rem var(--color--backgroud);
+  text-shadow: 0 0.3rem 0.5rem var(--color-backgroud);
   cursor: pointer;
 }
 
@@ -197,9 +198,9 @@
   top: 0;
   right: 5%;
   content: attr(data-meeting);
-  display: inline-block;
+  display: block;
   font-size: 2rem;
-  color: #E4773E;
+  color: var(--color-star);
 }
 
 .day__number--prev,
@@ -208,7 +209,7 @@
 }
 
 .today {
-  background-color: var(--color--additives);
+  background-color: var(--color-additives);
 }
 
 /* CalendarList.js */
@@ -219,11 +220,12 @@
   padding: 2rem;
 }
 
-.meetings__selected {
+.meetings__container {
   padding: 5rem;
 }
 
-.meetings__selected--title {
+.meetings__container--title,
+.meetings__list--title {
   text-align: center;
   font-size: 2.5rem;
   letter-spacing: 0.2rem;
@@ -231,43 +233,51 @@
   color: var(--color-text);
 }
 
-.main__meetings--list {
+.meetings__list--title {
+  margin-top: 5rem;
+}
+
+.main__meetings--list,
+.main__meetings--currentDay {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
 }
 
-.meetings__list--meeting {
+.meetings__list {
   display: flex;
   flex-direction: column;
   width: 45%;
   margin: 5rem 2rem;
   padding: 2rem;
-  background-color: var(--color--backgroud);
-  box-shadow: 0 1rem 3rem var(--color--backgroud);
-  border: 0.2rem solid var(--color--additives);
+  background-color: var(--color-backgroud);
+  box-shadow: 0 1rem 3rem var(--color-backgroud);
+  border: 0.2rem solid var(--color-additives);
 }
 
-.list__meeting--date,
-.list__meeting--email {
+.meeting__title,
+.meeting__date,
+.meeting__name,
+.meeting__email {
   font-size: 2rem;
   margin-top: 1rem;
   color: var(--color-text);
-  text-shadow: 0 0.3rem 0.5rem var(--color--backgroud);
+  text-shadow: 0 0.3rem 0.5rem var(--color-backgroud);
   text-align: center;
 }
 
-.list__meeting--email {
-  padding: 1rem;
+.meeting__email {
   text-decoration: none;
 }
 
-.email__highlight {
-  margin-left: 1rem;
-  color: var(--color--additives)
+.meeting__date,
+.meeting__email--highlight,
+.meeting__name--highlight {
+  margin: 1rem 0 0 0.4rem;
+  color: var(--color-additives)
 }
 
-.list__meeting--button {
+.meeting__button {
   display: block;
   position: relative;
   left: 50%;
@@ -276,8 +286,7 @@
   margin-top: 2rem;
   padding: 1rem 2rem;
   font-size: 1.7rem;
-  text-decoration: none;
-  background-color: #748320;
+  background-color: var(--color-additives);
   color: var(--color-text);
   border: none;
   border-radius: 0.5rem;

@@ -2,10 +2,6 @@ import React from 'react'
 
 export default class CalendarViev extends React.Component {
 
-    state = {
-        date: new Date()
-    }
-
     render() {
         return(
             <section className='main__section--calendarViev'>
@@ -29,40 +25,10 @@ export default class CalendarViev extends React.Component {
         )
     }
 
-    componentDidMount = () => {
-        this.getDataOfCurrentDay( this.state.date )
-    }
-
 
     handleNavClick = (e) => {
-        const currentDate = this.state.date;
-
-        if(e.target.className.includes('fa-arrow-left') ) {
-            const changeMonth = currentDate.setMonth(currentDate.getMonth() - 1 );
-
-            this.setState( {
-                date: new Date(changeMonth)
-            })
-        } else {
-            const changeMonth = currentDate.setMonth(currentDate.getMonth() + 1 );
-
-            this.setState( {
-                date: new Date(changeMonth)
-            })
-        }
-    }
-
-    getDataOfCurrentDay = (currentDate) => {
-        const currentDay = currentDate.toISOString().split('T')[0];
-        const { meetings, setCurrentDayMeetings } = this.props
-
-        const currentDayData = [];
-
-        meetings.forEach( meeting => {
-            if( meeting.date === currentDay ) { return currentDayData.push( meeting , currentDay ) }
-        })
-
-        setCurrentDayMeetings(currentDayData)
+        const { date , setDate } = this.props;
+        e.target.className.includes('fa-arrow-left') ? setDate( date.setMonth(date.getMonth() - 1 ) ) : setDate( date.setMonth(date.getMonth() + 1 ) )
     }
 
     handleDayClick = (e) => {
@@ -70,11 +36,14 @@ export default class CalendarViev extends React.Component {
 
         const meetingData = []
 
-        meetings.forEach( meeting => {
-            console.log(meeting)
-            if( meeting.date === e.target.dataset.date  ) { return meetingData.push(meeting , e.target.dataset.date) }
+        meetings.forEach ( meeting => {
+            if( meeting.date === e.target.dataset.date ) {
+                const data = { meeting: meeting, date: e.target.dataset.date }
+                meetingData.push(data)
+            }
         })
-        setSelectedMeetings(meetingData);
+
+        setSelectedMeetings(meetingData)
     }
 
     renderDaysNames = () => {
@@ -96,7 +65,7 @@ export default class CalendarViev extends React.Component {
 
     renderMonthName = () => {
         const { dateData: { monthsNames } } = this.props;
-        const currentDate = this.state.date
+        const currentDate = this.props.date
         const currentMonth = currentDate.getMonth();
 
         return(
@@ -109,7 +78,7 @@ export default class CalendarViev extends React.Component {
     }
 
     renderCurrentData = () => {
-        const currentDate = this.state.date
+        const currentDate = this.props.date
         const fullDate = currentDate.toDateString()
 
         return(
@@ -122,7 +91,7 @@ export default class CalendarViev extends React.Component {
     }
 
     renderNumberOfDays = () => {
-        const currentDate = this.state.date
+        const currentDate = this.props.date
 
         return [
             this.renderPrevMonthDays(currentDate),
@@ -137,12 +106,12 @@ export default class CalendarViev extends React.Component {
         const meetingNotification = []
 
         meetings.forEach( meeting => {
-            if( meeting.date === dayDate) {
+            if( meeting.date === dayDate ) {
                 const icon = String.fromCodePoint(10029)
                 meetingNotification.push( icon )
             }
         })
-        return meetingNotification
+        return meetingNotification[0]
     }
 
     renderCurrentMonthDays = (currentDate) => {

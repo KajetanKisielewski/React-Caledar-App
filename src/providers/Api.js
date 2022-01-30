@@ -20,17 +20,7 @@ export default class Api {
     }
 
     delateData(id) {
-        const options = { method: 'DELATE' };
-        return this._fetch(options, this.url, `/${id}`)
-    }
-
-    updateData(data, id) {
-        const options = {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: {'Content-Type': 'application/json'}
-        };
-
+        const options = { method: 'DELETE' };
         return this._fetch(options, this.url, `/${id}`)
     }
 
